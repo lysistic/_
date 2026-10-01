@@ -114,6 +114,28 @@ _None eliminated on budget: all 10 are inference- or simulator-scale on ≤1 GPU
 
 No idea was eliminated as already-published; all three survive the search half. Re-run under a registered cross-model reviewer (or `— reviewer: manual` with a non-Claude model) to obtain the recordable acquittal.
 
+### Full-text re-verification (round 2, 2026-10-01)
+
+> **Method fix**: round-1 novelty calls above were made from titles/abstracts and over-indexed on topic similarity. This round reads the *body* (threat model, assumptions, experimental setup) of the closest papers via full-text HTML. Three verdicts flipped. Still executor-only / UNADJUDICATED — no cross-model acquittal.
+
+- **Idea 1 → revised UP to ~7/10 (was being treated as partly scooped).** Full text of **SparSEEty** (2608.02995): attacker "controls the majority of privileged system software including the host VMM", uses page-fault / block-I/O / page-allocation channels, targets generic FFN activation sparsity for a single victim, and "assume[s] the attacker has no query access to the victim LLM service". Full text of **MoEcho** (2508.15036): "a malicious co-tenant on the same physical server", experts resident, microarchitectural channels only. **Neither covers Idea 1's weaker attacker** (ordinary API client, query/latency-only, exploiting a cross-tenant expert *offload* cache). Idea 1 is differentiated; its real risk is **feasibility**, not prior art — continuous batching may isolate the timing (2602.07878) and cross-tenant expert-cache sharing is undocumented. Verdict: **novel, PROCEED — feasibility-gated**.
+- **Idea 3 → revised UP to ~5–6/10 (round-1 harsh 3/10 was wrong).** Full text of **2609.17515** ("What Breaks Under Pruning in Smart Homes"): measures only smart-home tool-calling accuracy + over-refusal, applies post-pruning SFT healing, uses no adversarial jailbreak benchmark, and does not analyze safety-expert overlap. It does **not** occupy Idea 3's claim (benign efficiency expert-pruning raises jailbreak ASR, no realignment, on distributed checkpoints). Residual weakness: the result is somewhat "expected" from dense 2402.05162 + MoE-adversarial SAFEx — but expected ≠ done. Verdict: **differentiable, PROCEED — frame as supply-chain audit + overlap mechanism**.
+- **Idea 2 → revised DOWN to ~5/10.** Full text of **MoE-RBench** (2406.11353): it *does* use a matched dense control — "T5 … FLOP-matched to Switch Transformer … same activated parameter size" — and finds MoE "competitive to … similar-sized dense models" on harmful questions. It does **not** do ablation-budget refusal-collapse experiments. So Idea 2's only surviving sliver is the ablation-budget comparison on *modern* upcycled pairs (Switch/T5 is dated). Verdict: **partially occupied — PROCEED WITH CAUTION, narrow to the ablation-budget methodology**.
+
+### New directions from the under-explored privacy quadrant (full-text verified)
+
+Hard search found the **MoE memorization / training-data privacy** quadrant nearly empty (`MoE AND memoriz* AND (dense OR compare)` → 0 arXiv hits). Full text of the two closest papers confirms the gap: **RAPTOR** (2609.05770) is a *defense* (private training) that does not compare MoE-vs-dense leakage and explicitly *freezes/hides* the router; **SHAPOOL** (2510.13451) merely *uses* MoE to build cheap shadow models against *dense* targets, and does not treat routing as a membership signal. Two additions:
+
+- **New A — the "privacy tax" of sparse scaling (~6–7/10).** Measure whether a matched-resource MoE leaks more training data than its dense twin, via **verbatim extraction + canary regurgitation** (not classic MIA, which is weak at web scale). Substrate exists: strictly-equal-resource MoE/dense pairs (2506.12119). Low-risk,底座现成, publishable either direction.
+- **New B — routing-steered training-data extraction (~7/10, composition-novelty).** Compose two established-but-unjoined facts: MoE concentrates memorized knowledge in a low-entropy expert backbone (2601.08383; 2410.19034) **+** routing is input-steerable black-box (RouteHijack 2605.02946 / Misrouter 2605.04446). Hypothesis: biasing routing toward a target expert *amplifies* verbatim extraction of that expert's memorized data vs a routing-agnostic baseline. Input-only, falsifiable; `routing AND MoE AND extract*` returned no on-topic privacy work.
+
+### Round-2 ranking (full-text-grounded, UNADJUDICATED)
+1. **New B** routing-steered extraction — composition-novel, open, black-box.
+2. **Idea 1** remote expert-cache timing — differentiated; feasibility-gated.
+3. **New A** MoE privacy tax — open, substrate ready.
+4. **Idea 3** benign-pruning safety regression — salvaged; frame as supply-chain audit.
+5. **Idea 2** matched dense-control — partially occupied by MoE-RBench; narrow to ablation-budget.
+
 ## External Critical Review
 
 > **Status: `REVIEW_UNAVAILABLE`.** `/research-review` is a reviewer-bearing phase that must route to a non-Claude senior-reviewer model (Codex `gpt-6-astra` at xhigh, or `— reviewer: manual`/`oracle-pro`). None is registered here, so **no external review was obtained** and no `accept` receipt is written (the final gate will report this phase BLOCKED). What follows is **executor self-critique**, explicitly NOT a cross-model verdict — it cannot substitute for the external read, which contributes the independence the acceptance gate requires. It is recorded so a human (or a later run with a reviewer) has the strongest objections already surfaced.

@@ -7,8 +7,8 @@
 
 <meta name="generator" content="ARIS render-html (academic, v1)">
 <meta name="aris:source-path" content="idea-stage/IDEA_REPORT.md">
-<meta name="aris:source-sha256" content="594fe97ce91c99d14718b0e72963fc6a86f1096c674aa52218ee585892c01cfc">
-<meta name="aris:generated-at" content="2026-10-01 02:46 UTC">
+<meta name="aris:source-sha256" content="0894bdac7201b08dff9323e8c2add6cd7084fd7438149cacb95b8a558c51ed26">
+<meta name="aris:generated-at" content="2026-10-01 05:09 UTC">
 
 <!-- MathJax 3 -->
 <script>
@@ -494,6 +494,11 @@ body.aris-blog h2.aris-active-h2 {
 </ul>
 </li>
 <li><a href="#novelty-verification">Novelty Verification</a>
+<ul>
+<li><a href="#full-text-re-verification-round-2-2026-10-01">Full-text re-verification (round 2, 2026-10-01)</a></li>
+<li><a href="#new-directions-from-the-under-explored-privacy-quadrant-full-text-verified">New directions from the under-explored privacy quadrant (full-text verified)</a></li>
+<li><a href="#round-2-ranking-full-text-grounded-unadjudicated">Round-2 ranking (full-text-grounded, UNADJUDICATED)</a></li>
+</ul>
 </li>
 <li><a href="#external-critical-review">External Critical Review</a>
 </li>
@@ -511,11 +516,11 @@ body.aris-blog h2.aris-active-h2 {
   
   <h1>Idea Discovery Report</h1>
   
-  <p class="byline">By <strong>ARIS /idea-discovery (executor: claude-opus-5-5)</strong></p>
+  <p class="byline">By <strong>ARIS /idea-discovery (executor: claude-opus-4-8)</strong></p>
   <div class="meta">
     <span><strong>Source:</strong> <code>idea-stage/IDEA_REPORT.md</code></span>
-    <span><strong>SHA256:</strong> <code>594fe97ce91c</code></span>
-    <span><strong>Rendered:</strong> 2026-10-01 02:46 UTC</span>
+    <span><strong>SHA256:</strong> <code>0894bdac7201</code></span>
+    <span><strong>Rendered:</strong> 2026-10-01 05:09 UTC</span>
     
   </div>
 </header>
@@ -557,6 +562,14 @@ body.aris-blog h2.aris-active-h2 {
 <p><strong>Idea 2 — Matched dense-control safety audit.</strong> Closest: a black-box DeepSeek-MoE-vs-GPT-dense robustness comparison (2506.18543) and MoE-RBench (2406.11353) compare <em>different</em> models, not matched-lineage siblings under an identical ablation budget; every routing-attack paper (SAFEx, GateBreaker, L³, Unsafe Routes) omits a dense control. <strong>Differentiation: same-lineage MoE/dense pair + matched active-param ablation-budget sweep.</strong> Verdict (executor, UNADJUDICATED): <strong>differentiable but partially approached — PROCEED WITH CAUTION</strong>; tighten the contribution to the matched-control methodology.</p>
 <p><strong>Idea 3 — Safety regression from benign pruning.</strong> Closest: Unauthorized Compression (2511.19480) couples pruning with <em>malicious</em> fine-tuning to bypass licensing; MAESTRO (2607.08601) reports a "Safety" <em>utility</em> score, not jailbreak ASR. <strong>Differentiation: safety-agnostic efficiency pruning, no re-alignment, jailbreak-ASR as the metric.</strong> Verdict (executor, UNADJUDICATED): <strong>novel, PROCEED</strong>.</p>
 <p>No idea was eliminated as already-published; all three survive the search half. Re-run under a registered cross-model reviewer (or <code>— reviewer: manual</code> with a non-Claude model) to obtain the recordable acquittal.</p>
+<h3 id="full-text-re-verification-round-2-2026-10-01">Full-text re-verification (round 2, 2026-10-01)</h3>
+<blockquote><p><strong>Method fix</strong>: round-1 novelty calls above were made from titles/abstracts and over-indexed on topic similarity. This round reads the <em>body</em> (threat model, assumptions, experimental setup) of the closest papers via full-text HTML. Three verdicts flipped. Still executor-only / UNADJUDICATED — no cross-model acquittal.</p></blockquote>
+<ul><li><strong>Idea 1 → revised UP to ~7/10 (was being treated as partly scooped).</strong> Full text of <strong>SparSEEty</strong> (2608.02995): attacker "controls the majority of privileged system software including the host VMM", uses page-fault / block-I/O / page-allocation channels, targets generic FFN activation sparsity for a single victim, and "assume[s] the attacker has no query access to the victim LLM service". Full text of <strong>MoEcho</strong> (2508.15036): "a malicious co-tenant on the same physical server", experts resident, microarchitectural channels only. <strong>Neither covers Idea 1's weaker attacker</strong> (ordinary API client, query/latency-only, exploiting a cross-tenant expert <em>offload</em> cache). Idea 1 is differentiated; its real risk is <strong>feasibility</strong>, not prior art — continuous batching may isolate the timing (2602.07878) and cross-tenant expert-cache sharing is undocumented. Verdict: <strong>novel, PROCEED — feasibility-gated</strong>.</li><li><strong>Idea 3 → revised UP to ~5–6/10 (round-1 harsh 3/10 was wrong).</strong> Full text of <strong>2609.17515</strong> ("What Breaks Under Pruning in Smart Homes"): measures only smart-home tool-calling accuracy + over-refusal, applies post-pruning SFT healing, uses no adversarial jailbreak benchmark, and does not analyze safety-expert overlap. It does <strong>not</strong> occupy Idea 3's claim (benign efficiency expert-pruning raises jailbreak ASR, no realignment, on distributed checkpoints). Residual weakness: the result is somewhat "expected" from dense 2402.05162 + MoE-adversarial SAFEx — but expected ≠ done. Verdict: <strong>differentiable, PROCEED — frame as supply-chain audit + overlap mechanism</strong>.</li><li><strong>Idea 2 → revised DOWN to ~5/10.</strong> Full text of <strong>MoE-RBench</strong> (2406.11353): it <em>does</em> use a matched dense control — "T5 … FLOP-matched to Switch Transformer … same activated parameter size" — and finds MoE "competitive to … similar-sized dense models" on harmful questions. It does <strong>not</strong> do ablation-budget refusal-collapse experiments. So Idea 2's only surviving sliver is the ablation-budget comparison on <em>modern</em> upcycled pairs (Switch/T5 is dated). Verdict: <strong>partially occupied — PROCEED WITH CAUTION, narrow to the ablation-budget methodology</strong>.</li></ul>
+<h3 id="new-directions-from-the-under-explored-privacy-quadrant-full-text-verified">New directions from the under-explored privacy quadrant (full-text verified)</h3>
+<p>Hard search found the <strong>MoE memorization / training-data privacy</strong> quadrant nearly empty (<code>MoE AND memoriz* AND (dense OR compare)</code> → 0 arXiv hits). Full text of the two closest papers confirms the gap: <strong>RAPTOR</strong> (2609.05770) is a <em>defense</em> (private training) that does not compare MoE-vs-dense leakage and explicitly <em>freezes/hides</em> the router; <strong>SHAPOOL</strong> (2510.13451) merely <em>uses</em> MoE to build cheap shadow models against <em>dense</em> targets, and does not treat routing as a membership signal. Two additions:</p>
+<ul><li><strong>New A — the "privacy tax" of sparse scaling (~6–7/10).</strong> Measure whether a matched-resource MoE leaks more training data than its dense twin, via <strong>verbatim extraction + canary regurgitation</strong> (not classic MIA, which is weak at web scale). Substrate exists: strictly-equal-resource MoE/dense pairs (2506.12119). Low-risk,底座现成, publishable either direction.</li><li><strong>New B — routing-steered training-data extraction (~7/10, composition-novelty).</strong> Compose two established-but-unjoined facts: MoE concentrates memorized knowledge in a low-entropy expert backbone (2601.08383; 2410.19034) <strong>+</strong> routing is input-steerable black-box (RouteHijack 2605.02946 / Misrouter 2605.04446). Hypothesis: biasing routing toward a target expert <em>amplifies</em> verbatim extraction of that expert's memorized data vs a routing-agnostic baseline. Input-only, falsifiable; <code>routing AND MoE AND extract*</code> returned no on-topic privacy work.</li></ul>
+<h3 id="round-2-ranking-full-text-grounded-unadjudicated">Round-2 ranking (full-text-grounded, UNADJUDICATED)</h3>
+<ol><li><strong>New B</strong> routing-steered extraction — composition-novel, open, black-box.</li><li><strong>Idea 1</strong> remote expert-cache timing — differentiated; feasibility-gated.</li><li><strong>New A</strong> MoE privacy tax — open, substrate ready.</li><li><strong>Idea 3</strong> benign-pruning safety regression — salvaged; frame as supply-chain audit.</li><li><strong>Idea 2</strong> matched dense-control — partially occupied by MoE-RBench; narrow to ablation-budget.</li></ol>
 <h2 id="external-critical-review">External Critical Review</h2>
 <blockquote><p><strong>Status: <code>REVIEW_UNAVAILABLE</code>.</strong> <code>/research-review</code> is a reviewer-bearing phase that must route to a non-Claude senior-reviewer model (Codex <code>gpt-6-astra</code> at xhigh, or <code>— reviewer: manual</code>/<code>oracle-pro</code>). None is registered here, so <strong>no external review was obtained</strong> and no <code>accept</code> receipt is written (the final gate will report this phase BLOCKED). What follows is <strong>executor self-critique</strong>, explicitly NOT a cross-model verdict — it cannot substitute for the external read, which contributes the independence the acceptance gate requires. It is recorded so a human (or a later run with a reviewer) has the strongest objections already surfaced.</p></blockquote>
 <p><strong>Executor self-critique of the top idea (Idea 1), strongest objections first:</strong></p>
@@ -577,8 +590,8 @@ body.aris-blog h2.aris-active-h2 {
 <footer class="aris-footer">
   Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
   source path <code>idea-stage/IDEA_REPORT.md</code> ·
-  SHA256 <code>594fe97ce91c</code> ·
-  generated at 2026-10-01 02:46 UTC.
+  SHA256 <code>0894bdac7201</code> ·
+  generated at 2026-10-01 05:09 UTC.
   This is a generated view — edit the source Markdown, then re-render.
 </footer>
 </main>
