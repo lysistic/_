@@ -169,3 +169,19 @@ The workflow is not complete. Required stage evidence is missing:
 - BLOCKED: novelty-check review evidence missing (status=done)
 - BLOCKED: research-review review evidence missing (status=done)
 <!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:END -->
+
+## Lead idea (2026-10-02): Cross-layer expert sharing vs MoE fault isolation
+
+**Reframe (user-steered)**: move from *horizontal* (within-layer routing, where the field is saturated) to *vertical / cross-layer* structure — specifically **experts reused across depths** (cross-layer expert sharing). Framed as robustness / fault-isolation science, not an attack.
+
+**Claim**: the "MoE is robust / sparsity gives graceful degradation" folklore (2210.10253, 2601.14792) and "early-layer experts are redundant" (2606.10703) all assume **one expert per layer**. Cross-layer-shared MoE (CS-MoE 2609.22199, MoRE 2609.18176, MoUE 2603.04971, MoEUT 2405.16039; limiting case = the always-on shared expert in DeepSeek/Qwen) violates that premise, so a single-expert corruption's **blast radius should scale with its depth-reuse count, not 1/N** — fault isolation collapses.
+
+**Full-text novelty verification (round 3)**: all efficiency papers above evaluate only utility, never robustness/fault. 2609.02404 ("Shared Routing Geometry") establishes cross-layer routing coupling but is **mechanistic only, layer-isolated models (OLMoE/Phi), no ablation, no robustness**. 2606.10703 ("causal audit") finds early-layer redundancy but **per-layer / layer-isolated**. 2601.14792 robustness claim is on standard MoE, **no single-expert blast radius, no cross-layer reuse**. → the security/robustness consequence of cross-layer expert sharing is unoccupied.
+
+**Four-question gate**: Q1 robustness folklore has an unstated layer-isolation scope condition; Q2 single-expert ablation blast-radius vs depth-reuse count, shared vs matched isolated; Q3 strongest methods (2210.10253 / 2601.14792 / 2606.10703 / 2609.02404) all structurally can't answer it (layer-isolated or no ablation); Q4 abandon if shared-layer degrades no worse under matched single-expert perturbation.
+
+**Status**: executor-only / UNADJUDICATED (no cross-model reviewer); inference-only pilot pending (no GPU here; MoEUT/MoRE are 114M–1.15B → low-cost). Conditional **6.5/10** — the strongest-footed and most structurally-original candidate of this run; emerged from the user's vertical/cross-layer steer.
+- Proposal: `refine-logs/CROSSLAYER_PROPOSAL.md`
+- Experiment plan: `refine-logs/CROSSLAYER_EXPERIMENT_PLAN.md`
+
+**Importance caveat**: shared-layer MoE is still mostly research-stage; the forward-looking framing ("efficiency-via-reuse silently trades away fault isolation") + the flagship always-on shared expert as the limiting case carry the relevance.
