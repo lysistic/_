@@ -185,3 +185,22 @@ The workflow is not complete. Required stage evidence is missing:
 - Experiment plan: `refine-logs/CROSSLAYER_EXPERIMENT_PLAN.md`
 
 **Importance caveat**: shared-layer MoE is still mostly research-stage; the forward-looking framing ("efficiency-via-reuse silently trades away fault isolation") + the flagship always-on shared expert as the limiting case carry the relevance.
+
+## Lead idea v2 (2026-10-03): Routing-mediated quantization-conditioned backdoor in MoE + routing-aware audit
+
+**Direction**: quantization × MoE routing, framed defense-first (the audit is the deliverable).
+
+**Claim**: dense quantization-conditioned backdoors (QCB; Egashira 2024) and their defenses (FlipGuard 2606.28962, rounding-trap/QuantGuard 2606.29239) live in the **continuous weight-rounding bin**. MoE routing is a **discrete top-k argmax**: a backdoor whose trigger is a quantization-induced routing flip toward a clean-looking dormant expert is a **different mechanism**, and the weight-bin defense family is **structurally blind** to it. Deliverable: a routing-aware pre-deployment audit (flag experts going dormant→active under simulated quantization).
+
+**Full-text novelty verification (round 4, decisive)**:
+- FlipGuard (2606.28962) full text: perturbs weight rounding bins; "makes no mention of MoE/routing"; "no mechanism to monitor/modify router logits"; "incompatible with MoE routing-mediated attacks".
+- Rounding-trap/QuantGuard (2606.29239) full text: operates on weight rounding component r=W/s−⌊W/s⌋; no MoE/routing.
+- AgentQ (2609.14060) full text: dense agents, weight-rounding equivalence class; "zero references to MoE/expert routing/top-k/dormant experts".
+- Egashira 2024: dense. 2608.11212: accidental quant route-flip, not adversarial. BadMoE: input-trigger not quant. 2609.12550: efficiency routing, not security.
+→ The cell "quantization-activated malicious dormant expert via routing flip, evading weight-bin defenses" is unoccupied; the make-or-break (weight-bin defenses miss routing-mediated QCB) is confirmed in its favor by full-text of both defenses.
+
+**Contribution triad**: (1) new attack class — routing-mediated QCB (mechanism distinct from weight-bin QCB); (2) category finding — the weight-bin QCB defense family is structurally blind on sparse architectures (confirmed); (3) defense — a routing-aware QCB audit.
+
+**Status / honesty**: executor-only / UNADJUDICATED (no cross-model reviewer). Constructibility (C1) is the empirical make-or-break, needs a GPU pilot on a small open MoE (not runnable here). Dual-use managed by defense-first framing. Conditional **6.5–7/10** — the first candidate whose attack-side make-or-break (defense evasion) is confirmed by full-text, with an attack+category+defense structure.
+- Proposal: `refine-logs/QCB_ROUTING_PROPOSAL.md`
+- Experiment plan: `refine-logs/QCB_ROUTING_EXPERIMENT_PLAN.md`

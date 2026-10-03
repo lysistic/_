@@ -7,8 +7,8 @@
 
 <meta name="generator" content="ARIS render-html (academic, v1)">
 <meta name="aris:source-path" content="idea-stage/IDEA_REPORT.md">
-<meta name="aris:source-sha256" content="41c8eb1a0a41cb3b64dfa36413fe89ea89cbf2e09ea181e2dcf58eeae726cc91">
-<meta name="aris:generated-at" content="2026-10-02 07:50 UTC">
+<meta name="aris:source-sha256" content="91175c68033d792a3d9132b095395759c67e4844fe11160d76a514201c2953dd">
+<meta name="aris:generated-at" content="2026-10-03 03:05 UTC">
 
 <!-- MathJax 3 -->
 <script>
@@ -510,6 +510,8 @@ body.aris-blog h2.aris-active-h2 {
 </li>
 <li><a href="#lead-idea-2026-10-02-cross-layer-expert-sharing-vs-moe-fault-isolation">Lead idea (2026-10-02): Cross-layer expert sharing vs MoE fault isolation</a>
 </li>
+<li><a href="#lead-idea-v2-2026-10-03-routing-mediated-quantization-conditioned-backdoor-in-moe--routing-aware-audit">Lead idea v2 (2026-10-03): Routing-mediated quantization-conditioned backdoor in MoE + routing-aware audit</a>
+</li>
 </ol>
 </nav>
 
@@ -518,11 +520,11 @@ body.aris-blog h2.aris-active-h2 {
   
   <h1>Idea Discovery Report</h1>
   
-  <p class="byline">By <strong>ARIS /idea-discovery (executor: claude-opus-4-8)</strong></p>
+  <p class="byline">By <strong>ARIS /idea-discovery (executor: claude-opus-5-5)</strong></p>
   <div class="meta">
     <span><strong>Source:</strong> <code>idea-stage/IDEA_REPORT.md</code></span>
-    <span><strong>SHA256:</strong> <code>41c8eb1a0a41</code></span>
-    <span><strong>Rendered:</strong> 2026-10-02 07:50 UTC</span>
+    <span><strong>SHA256:</strong> <code>91175c68033d</code></span>
+    <span><strong>Rendered:</strong> 2026-10-03 03:05 UTC</span>
     
   </div>
 </header>
@@ -596,12 +598,21 @@ body.aris-blog h2.aris-active-h2 {
 <p><strong>Status</strong>: executor-only / UNADJUDICATED (no cross-model reviewer); inference-only pilot pending (no GPU here; MoEUT/MoRE are 114M–1.15B → low-cost). Conditional <strong>6.5/10</strong> — the strongest-footed and most structurally-original candidate of this run; emerged from the user's vertical/cross-layer steer.</p>
 <ul><li>Proposal: <code>refine-logs/CROSSLAYER_PROPOSAL.md</code></li><li>Experiment plan: <code>refine-logs/CROSSLAYER_EXPERIMENT_PLAN.md</code></li></ul>
 <p><strong>Importance caveat</strong>: shared-layer MoE is still mostly research-stage; the forward-looking framing ("efficiency-via-reuse silently trades away fault isolation") + the flagship always-on shared expert as the limiting case carry the relevance.</p>
+<h2 id="lead-idea-v2-2026-10-03-routing-mediated-quantization-conditioned-backdoor-in-moe--routing-aware-audit">Lead idea v2 (2026-10-03): Routing-mediated quantization-conditioned backdoor in MoE + routing-aware audit</h2>
+<p><strong>Direction</strong>: quantization × MoE routing, framed defense-first (the audit is the deliverable).</p>
+<p><strong>Claim</strong>: dense quantization-conditioned backdoors (QCB; Egashira 2024) and their defenses (FlipGuard 2606.28962, rounding-trap/QuantGuard 2606.29239) live in the <strong>continuous weight-rounding bin</strong>. MoE routing is a <strong>discrete top-k argmax</strong>: a backdoor whose trigger is a quantization-induced routing flip toward a clean-looking dormant expert is a <strong>different mechanism</strong>, and the weight-bin defense family is <strong>structurally blind</strong> to it. Deliverable: a routing-aware pre-deployment audit (flag experts going dormant→active under simulated quantization).</p>
+<p><strong>Full-text novelty verification (round 4, decisive)</strong>:</p>
+<ul><li>FlipGuard (2606.28962) full text: perturbs weight rounding bins; "makes no mention of MoE/routing"; "no mechanism to monitor/modify router logits"; "incompatible with MoE routing-mediated attacks".</li><li>Rounding-trap/QuantGuard (2606.29239) full text: operates on weight rounding component r=W/s−⌊W/s⌋; no MoE/routing.</li><li>AgentQ (2609.14060) full text: dense agents, weight-rounding equivalence class; "zero references to MoE/expert routing/top-k/dormant experts".</li><li>Egashira 2024: dense. 2608.11212: accidental quant route-flip, not adversarial. BadMoE: input-trigger not quant. 2609.12550: efficiency routing, not security.</li></ul>
+<p>→ The cell "quantization-activated malicious dormant expert via routing flip, evading weight-bin defenses" is unoccupied; the make-or-break (weight-bin defenses miss routing-mediated QCB) is confirmed in its favor by full-text of both defenses.</p>
+<p><strong>Contribution triad</strong>: (1) new attack class — routing-mediated QCB (mechanism distinct from weight-bin QCB); (2) category finding — the weight-bin QCB defense family is structurally blind on sparse architectures (confirmed); (3) defense — a routing-aware QCB audit.</p>
+<p><strong>Status / honesty</strong>: executor-only / UNADJUDICATED (no cross-model reviewer). Constructibility (C1) is the empirical make-or-break, needs a GPU pilot on a small open MoE (not runnable here). Dual-use managed by defense-first framing. Conditional <strong>6.5–7/10</strong> — the first candidate whose attack-side make-or-break (defense evasion) is confirmed by full-text, with an attack+category+defense structure.</p>
+<ul><li>Proposal: <code>refine-logs/QCB_ROUTING_PROPOSAL.md</code></li><li>Experiment plan: <code>refine-logs/QCB_ROUTING_EXPERIMENT_PLAN.md</code></li></ul>
 
 <footer class="aris-footer">
   Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
   source path <code>idea-stage/IDEA_REPORT.md</code> ·
-  SHA256 <code>41c8eb1a0a41</code> ·
-  generated at 2026-10-02 07:50 UTC.
+  SHA256 <code>91175c68033d</code> ·
+  generated at 2026-10-03 03:05 UTC.
   This is a generated view — edit the source Markdown, then re-render.
 </footer>
 </main>
